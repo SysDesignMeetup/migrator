@@ -84,6 +84,34 @@ To be expanded.
 * Bindings/wrappers/connectors to fetch and to push data from and to external sources.
 * Conflict resolution logic for data onboarding.
 * Fail-by-design for DSL txns that failed to fetch some key data from some key storages.
+  
+### Migrator Support for Connected Data Structures
+
+Migrator also supports connected data structures, which are typically stored using relations, graphs, or collections across different datastores. This functionality enables efficient handling of reference checks, durable data mutations, and constraints that are challenging to manage when:
+
+- A monolith is split into microservices.
+- The system has never been designed to support such constraints.
+
+#### Illustration of the Concept
+
+To clarify, consider a canonical example based on a social media application model:
+
+- A **User** (`Id`, `Realname`, `Email`) can belong to multiple **Groups** (`Id`, `Name`).
+- A **User** can create multiple **Posts** (`Id`, `Title`, `Content`).
+
+Now, assume that `Users`, `Groups`, and `Posts` are stored in different datastores. If a group is removed, we must also remove all posts associated with it. 
+
+#### How Migrator Handles This
+
+When Migrator takes over and the dependency graph is properly defined, it automatically creates Directed Acyclic Graphs (DAGs) internally. This allows operations, such as mutations, to propagate seamlessly across the entire graph.
+
+For example, the following operation:
+
+```
+foreach (User u : Users.findByGroup(id)) {
+    remove(Posts.find(userId, groupId));
+}
+```
 
 ## Areas to Dive Deeper
 
