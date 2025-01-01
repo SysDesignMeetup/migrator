@@ -108,8 +108,8 @@ When Migrator takes over and the dependency graph is properly defined, it automa
 For example, the following operation:
 
 ```
-foreach (User u : Users.findByGroup(id)) {
-    remove(Posts.find(userId, groupId));
+foreach (User u : Users.findByGroup(groupId)) {
+    remove(Posts.find(user.id, groupId));
 }
 ```
 
