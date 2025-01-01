@@ -105,7 +105,7 @@ Now, assume that `Users`, `Groups`, and `Posts` are stored in different datastor
 
 When Migrator takes over and the dependency graph is properly defined, it automatically creates Directed Acyclic Graphs (DAGs) internally. This allows operations, such as mutations, to propagate seamlessly across the entire graph.
 
-For example, the following operation would be translated underneath into:
+For example, the following operation:
 
 ```
 group.delete();
@@ -118,6 +118,10 @@ foreach (User user : Users.findByGroup(groupId)) {
     remove(Posts.find(user.id, groupId));
 }
 ```
+
+would be handled as a single transaction, ensuring guaranteed execution regardless of underlying failures. 
+
+With `migrator`, managing connected data structures using durable data mutations across distributed data sources becomes significantly more efficient and reliable.
 
 ## Areas to Dive Deeper
 
